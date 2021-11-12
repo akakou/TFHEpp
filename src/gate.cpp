@@ -280,6 +280,7 @@ void HomSUB(TRLWE<lvl1param> &res, const TRLWE<lvl1param> &ca,
     for (int i = 0; i < 2; i++)
         for (int j = 0; j <= lvl1param::n; j++) res[i][j] = ca[i][j] - cb[i][j];
 }
+
 template <int casign, int cbsign, typename lvl0param::T offset>
 inline void HomGate(TLWE<lvl0param> &res, const TLWE<lvl0param> &ca,
                     const TLWE<lvl0param> &cb, const GateKey &gk)
@@ -291,26 +292,32 @@ inline void HomGate(TLWE<lvl0param> &res, const TLWE<lvl0param> &ca,
 }
 
 void HomMULTCONST(TRLWE<lvl1param> &res, const TRLWE<lvl1param> &crypt,
-                  const Polynomial<lvl1param> &poly, const Encoder &encoder)
-
-{
-    PolyMul<lvl1param>(res[0], crypt[0], poly);
-    PolyMul<lvl1param>(res[1], crypt[1], poly);
-}
-
-void HomMULTCONST(TRLWE<lvl1param> &res, const TRLWE<lvl1param> &crypt,
                   const array<double, lvl1param::n> &array,
                   const Encoder &encoder)
 
 {
+    double zero = encoder.encode(0);
+    TRLWE<lvl1param> tmp = crypt;
+
     std::array<lvl1param::T, lvl1param::n> encoded;
     for (int i = 0; i < lvl1param::n; i++) {
-        // encoded[i] = encoder.encode(array[i]);
         encoded[i] = array[i];
     }
 
+    for (int i = 0; i < lvl1param::n; i++) {
+        tmp[0][i] += zero;
+        tmp[1][i] += zero;
+    };
+
     Polynomial<lvl1param> poly = encoded;
-    HomMULTCONST(res, crypt, poly, encoder);
+
+    PolyMul<lvl1param>(res[0], crypt[0], poly);
+    PolyMul<lvl1param>(res[1], crypt[1], poly);
+
+    for (int i = 0; i < lvl1param::n; i++) {
+        res[0][i] -= zero;
+        res[1][i] -= zero;
+    };
 }
 
 void HomNAND(TLWE<lvl0param> &res, const TLWE<lvl0param> &ca,

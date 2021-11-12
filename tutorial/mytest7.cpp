@@ -16,8 +16,9 @@ void mul_test()
     array<double, TFHEpp::lvl1param::n> a_double_array, b_double_array,
         c_double_array, d_double_array;
     TFHEpp::Polynomial<TFHEpp::lvl1param> a_int_array, b_int_array, c_int_array;
+    TRLWE<TFHEpp::lvl1param> c1, c2;
 
-    TFHEpp::Encoder encoder(0, 1000, 31);
+    TFHEpp::Encoder encoder(-1, 1000, 31);
 
     a_double_array.fill(0);
     b_double_array.fill(0);
@@ -33,8 +34,6 @@ void mul_test()
         b_int_array[i] = i + 1;
     }
 
-    TRLWE<TFHEpp::lvl1param> c1, c2;
-
     c1 = TFHEpp::trlweSymEncodeEncrypt<TFHEpp::lvl1param>(
         a_double_array, TFHEpp::lvl1param::alpha, key.lvl1, encoder);
 
@@ -46,7 +45,6 @@ void mul_test()
     TFHEpp::HomMULTCONST(c2, c1, b_double_array, encoder);
 
     puts("---- mul result(decrypted) ----");
-
     d_double_array =
         TFHEpp::trlweSymDecryptDecode<TFHEpp::lvl1param>(c2, key.lvl1, encoder);
 
