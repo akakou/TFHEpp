@@ -43,6 +43,9 @@ void HomMULTCONSTREAL(TLWE<lvl0param> &res, const TLWE<lvl0param> &ca,
                       double mult_max);
 void HomMULTCONST01(TLWE<lvl0param> &res, const TLWE<lvl0param> &ca,
                     const double &b, Encoder &encoder, int mult_bp);
+void HomMULTCONST(TRLWE<lvl1param> &res, const TRLWE<lvl1param> &crypt,
+                  const Polynomial<lvl1param> poly,
+                  const TRLWE<lvl1param> zero);
 void HomMAX(TLWE<lvl0param> &res, const TLWE<lvl0param> &ca,
             const TLWE<lvl0param> &cb, Encoder &encoder1, Encoder &encoder2,
             Encoder &encoder_bs, GateKey &gk);
@@ -81,4 +84,5 @@ void HomMUXwoSE(TRLWE<typename P::targetP> &res,
 void ExtractSwitchAndHomMUX(TRLWE<lvl1param> &res, const TRLWE<lvl1param> &csr,
                             const TRLWE<lvl1param> &c1r,
                             const TRLWE<lvl1param> &c0r, const GateKey &gk);
+
 }  // namespace TFHEpp
